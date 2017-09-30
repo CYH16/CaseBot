@@ -50,6 +50,7 @@ bot.dialog('PE', [
 bot.dialog('tools', [
     function (session) {
 		var tools = Object.keys(Data["tools"]);
+		tools.push("我要診斷");
 		var message = new builder.Message(session).text("接下來你想做什麼呢？").suggestedActions(
 			builder.SuggestedActions.create(
 				session, tools.map(choice => new builder.CardAction.imBack(session, choice, choice))
