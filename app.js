@@ -50,12 +50,13 @@ bot.dialog('PE', [
 bot.dialog('tools', [
     function (session) {
 		var tools = Object.keys(Data["tools"]);
-		tools.push("我要診斷");
-		var card = new builder.ThumbnailCard(session).title('接下來你想做什麼呢？').text('如果想要診斷的話就直接打"我要診斷"吧！').buttons(tools.map(choice => new builder.CardAction.imBack(session, choice, choice)));
-        var message = new builder.Message(session).addAttachment(card);
+		var message = new builder.Message(session).text("接下來你想做什麼呢？").suggestedActions(
+			builder.SuggestedActions.create(
+				session, tools.map(choice => new builder.CardAction.imBack(session, choice, choice))
+			)
+		);
 		builder.Prompts.text(session, message);
-        //builder.Prompts.choice(session,"接下來你想做什麼呢？\n",Object.keys(Data["tools"]).join('|').concat("|下診斷"),{listStyle: builder.ListStyle["button"],retryPrompt:"請選擇我們現在有的工具喔，有".concat((Object.keys(Data["tools"])).join('、')).concat("；除此之外，你也可以下診斷。")});
-    },
+		},
 	function (session, results){
 		if (results.response == "我要診斷" || results.response == "下診斷" || results.response == "診斷" || results.response == "我要下診斷") {
 			session.replaceDialog("diagnosis");
@@ -78,8 +79,11 @@ bot.dialog('tools', [
 bot.dialog('diagnosis', [
     function (session) {
 		var help = ['等等我還想做其他檢查', '太難了吧~給我點選項~'];
-		var card = new builder.ThumbnailCard(session).title('你的診斷是？').text('直接打出你的診斷吧！').buttons(help.map(choice => new builder.CardAction.imBack(session, choice, choice)));
-        var message = new builder.Message(session).addAttachment(card);
+		var message = new builder.Message(session).text("你的診斷是？直接打出你的診斷吧！").suggestedActions(
+			builder.SuggestedActions.create(
+				session, help.map(choice => new builder.CardAction.imBack(session, choice, choice))
+			)
+		);
 		builder.Prompts.text(session, message);
     },
 	function (session, results){
@@ -100,10 +104,13 @@ bot.dialog('diagnosis', [
 bot.dialog('options', [
     function (session) {
 		var options = Data["options"];
-		var card = new builder.ThumbnailCard(session).title('好吧').text('可能的診斷有以下幾個：').buttons(options.map(choice => new builder.CardAction.imBack(session, choice, choice)));
-        var message = new builder.Message(session).addAttachment(card);
+		var message = new builder.Message(session).text("好吧，可能的診斷有以下幾個：").suggestedActions(
+			builder.SuggestedActions.create(
+				session, options.map(choice => new builder.CardAction.imBack(session, choice, choice))
+			)
+		);
 		builder.Prompts.text(session, message);
-    },
+	},
 	function (session, results){
 		if (Data["diagnosis"].indexOf(results.response) >= 0) {
 			session.send("答對了！這位病人罹患的是急性心包膜炎(acute pericarditis)。")
@@ -117,6 +124,9 @@ bot.dialog('options', [
 
 bot.dialog('summary', [
     function (session) {
-        session.send("%s", Data["summary"]);
-    }
+		builder.Prompts.text(session, Data["summary"]);
+    },
+	function (session) {
+		session.replaceDialog("scene");
+	}
 ]);
