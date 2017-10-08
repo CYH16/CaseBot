@@ -1,16 +1,40 @@
+[
 {
+	"id":1,
 	"scene":"58歲女性，過去有高血壓和糖尿病，這次主訴為6小時前開始出現尖銳的胸痛，合併全身無力的狀況，因此來到急診室求診。患者的生命徵象穩定，脈博102、血壓150/90，體溫38.3，血氧濃度97%。",
-	"PE":["PE結果在胸壁聽見以下雜音，無其他明顯異常。","http://k003.kiwi6.com/hotlink/tbe2o0oj47/Pericardial_Friction_Rub.mp3"],
+	"inquiry":["問診結果如下圖。","./case_data/1/inquiry.png"],
+	"PE":["PE結果在胸壁聽見以下雜音，無其他明顯異常。","音","./case_data/1/PE.mp3"],
 	"tools":{
 		"CBC":"CBC發現white count升高。",
 		"肝腎功能":"肝腎功能正常。",
-		"Cardiac biomarkers":"Cardiac biomarkers發現toponin T輕微升高。",
+		"Cardiac biomarkers":"Cardiac biomarkers發現troponin T輕微升高。",
 		"D-dimer":"D-dimer正常。",
-		"CXR":["CXR如下圖。","https://upload.wikimedia.org/wikipedia/commons/c/c8/Chest_Xray_PA_3-8-2010.png"],
-		"ECG":["ECG如下圖。","https://upload.wikimedia.org/wikipedia/commons/7/7e/Pericarditis10.JPG"],
+		"CXR":["CXR如下圖。","./case_data/1/tools_CXR.jpg"],
+		"ECG":["ECG如下圖。","./case_data/1/tools_ECG.jpg"],
 		"心臟超音波":"心臟超音波發現有輕微的pericardial effusion。"
 	},
 	"diagnosis":["急性心包膜炎","心包膜炎","acute pericarditis","pericarditis"],
+	"answer":"急性心包膜炎(acute pericarditis)",
 	"options":["急性冠心症","主動脈剝離","急性心包膜炎","急性肺栓塞","氣胸","食道破裂"],
 	"summary":"急性胸痛的鑑別診斷可以參考：\n\n-> [[TINY NOTES的連結]]\n\n-> https://goo.gl/6oWUDc\n\n其中急性心包膜炎的特徵有：\n\n．可能原因有idiopathic、感染、自體免疫、腫瘤、uremia等\n\n．胸痛在前傾時會比較緩解\n\n．可以聽到pericardial friction rub\n\n．ECG會呈現diffuse PR segment depressions和ST segment elevations\n\n．心臟超音波可能會發現pericardial effusion\n\n．Cardiac biomarkers可能會上升\n\n．可以使用NSAID治療"
+},
+{
+	"id":2,
+	"scene":"王先生是個22歲的男性，身高180公分，體重63公斤。他過去沒有特殊的慢性疾病，也都有在規律的運動。然而，在今天上午，他突然感到一陣胸痛襲來，而且症狀在休息後也沒改善，稍微活動就有些喘，因此他到急診室求診。到急診室時，他的生命徵象為 37.1/90/22；Sat：94%，BP=135/74。",
+	"inquiry":["問診結果如下圖。","./case_data/2/inquiry.png"],
+	"PE":"PE結果聽見右側的呼吸音降低，且右側胸壁叩診有hyper-resonance。",
+	"tools":{
+		"CBC":"CBC正常",
+		"電解質":"電解質正常",
+		"肝腎功能":"肝腎功能正常。",
+		"Cardiac biomarkers":"Cardiac biomarkers正常。",
+		"D-dimer":"D-dimer正常。",
+		"CXR":["CXR如下圖。","./case_data/2/tools_CXR.jpg"],
+		"ECG":["ECG如下圖。","./case_data/2/tools_ECG.jpg"]
+	},
+	"diagnosis":["氣胸","右側氣胸","pneumothorax","tension pneumothorax"],
+	"answer":"右側氣胸(pneumothorax)",
+	"options":["急性冠心症","主動脈剝離","急性心包膜炎","急性肺栓塞","氣胸","食道破裂"],
+	"summary":"SUMMARY"
 }
+]

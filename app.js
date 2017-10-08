@@ -19,37 +19,107 @@ server.post('/api/messages', connector.listen());
 // Get data
 const Data = JSON.parse(require('fs').readFileSync('./case_data.json', 'utf8'));
 
-// Receive messages from the user and respond by echoing each message back (prefixed with 'You said:')
 var bot = new builder.UniversalBot(connector, [
 	function (session) {
-		session.send("嗨你好");
-		session.beginDialog('scene');
+		var go = ['隨機幫我挑吧'];
+		var message = new builder.Message(session).text("嗨你好，你想要練習哪一個case呢？").suggestedActions(
+			builder.SuggestedActions.create(
+				session, go.map(choice => new builder.CardAction.imBack(session, choice, choice))
+			)
+		);
+        builder.Prompts.text(session, message);
 	},
+	function (session, results){
+		if (results.response == "隨機幫我挑吧") {
+			session.send("好的，幫你隨機挑喔~");
+			i = Math.floor(Math.random()*Data.length);
+			Case = Data[i];
+			session.replaceDialog("scene");
+		} else {
+			session.send("Sorry~我們現在只能夠隨機挑，先幫你隨機挑喔><")
+			i = Math.floor(Math.random()*Data.length);
+			Case = Data[i];
+			session.replaceDialog("scene");
+		}
+	}
 ]);
 
 bot.dialog('scene', [
     function (session) {
-        session.send("%s", Data["scene"]);
-		session.beginDialog('PE');
-    }
+		var go = ['問診'];
+		var message = new builder.Message(session).text(Case["scene"]).suggestedActions(
+			builder.SuggestedActions.create(
+				session, go.map(choice => new builder.CardAction.imBack(session, choice, choice))
+			)
+		);
+        builder.Prompts.text(session, message);
+    },
+	function (session, results){
+		if (results.response == "問診") {
+			session.replaceDialog("inquiry");
+		} else {
+			session.send("接下來應該要先問診喔><")
+			session.replaceDialog("inquiry");
+		}
+	}
+]);
+
+bot.dialog('inquiry', [
+    function (session) {
+		if (Array.isArray(Case["inquiry"])) {
+			var go = ['理學檢查'];
+			var message = new builder.Message().setText(session, Case["inquiry"][0]).addAttachment({contentType:'image', contentUrl:Case["inquiry"][1]}).suggestedActions(
+				builder.SuggestedActions.create(
+					session, go.map(choice => new builder.CardAction.imBack(session, choice, choice))
+				)
+			);
+			builder.Prompts.text(session, message);
+		} else {
+			var go = ['理學檢查'];
+			var message = new builder.Message(session).text(Case["inqury"]).suggestedActions(
+				builder.SuggestedActions.create(
+					session, go.map(choice => new builder.CardAction.imBack(session, choice, choice))
+				)
+			);
+			builder.Prompts.text(session, message);
+		}    
+	},
+	function (session, results){
+		if (results.response == "理學檢查") {
+			session.replaceDialog("PE");
+		} else {
+			session.send("接下來應該要做理學檢查喔><")
+			session.replaceDialog("PE");
+		}
+	}
 ]);
 
 bot.dialog('PE', [
     function (session) {
-		if (Array.isArray(Data["PE"])) {
-			var reply = new builder.Message().setText(session, Data["PE"][0]).addAttachment({contentType:'audio', contentUrl:Data["PE"][1]});
-			session.send(reply);
-			session.beginDialog('tools');
+		if (Array.isArray(Case["PE"])) {
+			if (Case["PE"][1] == "圖") {
+				var reply = new builder.Message().setText(session, Case["PE"][0]).addAttachment({contentType:'image', contentUrl:Case["PE"][2]});
+				session.send(reply);
+				session.replaceDialog('tools');
+			} else if (Case["PE"][1] == "音") {
+				var reply = new builder.Message().setText(session, Case["PE"][0]).addAttachment({contentType:'audio', contentUrl:Case["PE"][2]});
+				session.send(reply);
+				session.replaceDialog('tools');				
+			} else if (Case["PE"][1] == "圖+音") {
+				var reply = new builder.Message().setText(session, Case["PE"][0]).addAttachment({contentType:'image', contentUrl:Case["PE"][2]}).addAttachment({contentType:'audio', contentUrl:Case["PE"][3]});
+				session.send(reply);
+				session.replaceDialog('tools');				
+			}
 		} else {
-			session.send("%s", Data["PE"]);
-			session.beginDialog('tools');
+			session.send("%s", Case["PE"]);
+			session.replaceDialog('tools');
 		}    
 	}
 ]);
 
 bot.dialog('tools', [
     function (session) {
-		var tools = Object.keys(Data["tools"]);
+		var tools = Object.keys(Case["tools"]);
 		tools.push("我要診斷");
 		var message = new builder.Message(session).text("接下來你想做什麼呢？").suggestedActions(
 			builder.SuggestedActions.create(
@@ -61,13 +131,13 @@ bot.dialog('tools', [
 	function (session, results){
 		if (results.response == "我要診斷" || results.response == "下診斷" || results.response == "診斷" || results.response == "我要下診斷") {
 			session.replaceDialog("diagnosis");
-		} else if (results.response in Data["tools"]) {
-			if (Array.isArray(Data["tools"][results.response])) {
-				var reply = new builder.Message().setText(session, Data["tools"][results.response][0]).addAttachment({contentType:'image/jpeg', contentUrl:Data["tools"][results.response][1]});
+		} else if (results.response in Case["tools"]) {
+			if (Array.isArray(Case["tools"][results.response])) {
+				var reply = new builder.Message().setText(session, Case["tools"][results.response][0]).addAttachment({contentType:'image', contentUrl:Case["tools"][results.response][1]});
 				session.send(reply);
 				session.replaceDialog("tools")
 			} else {
-				session.send("%s", Data["tools"][results.response]);
+				session.send("%s", Case["tools"][results.response]);
 				session.replaceDialog("tools");
 			}
 		} else {
@@ -92,11 +162,11 @@ bot.dialog('diagnosis', [
 			session.replaceDialog("tools");
 		} else if (results.response == "太難了吧~給我點選項~") {
 			session.replaceDialog("options");
-		} else if (Data["diagnosis"].indexOf(results.response) >= 0) {
-			session.send("答對了！這位病人罹患的是急性心包膜炎(acute pericarditis)。")
+		} else if (Case["diagnosis"].indexOf(results.response) >= 0) {
+			session.send("答對了！這位病人罹患的是"+Case["answer"]+"。")
 			session.replaceDialog("summary");
 		} else {
-			session.send("錯囉！這位病人罹患的是急性心包膜炎(acute pericarditis)。")
+			session.send("錯囉！這位病人罹患的是"+Case["answer"]+"。")
 			session.replaceDialog("summary");
 		}
 	}
@@ -104,7 +174,7 @@ bot.dialog('diagnosis', [
 
 bot.dialog('options', [
     function (session) {
-		var options = Data["options"];
+		var options = Case["options"];
 		var message = new builder.Message(session).text("好吧，可能的診斷有以下幾個：").suggestedActions(
 			builder.SuggestedActions.create(
 				session, options.map(choice => new builder.CardAction.imBack(session, choice, choice))
@@ -113,11 +183,11 @@ bot.dialog('options', [
 		builder.Prompts.text(session, message);
 	},
 	function (session, results){
-		if (Data["diagnosis"].indexOf(results.response) >= 0) {
-			session.send("答對了！這位病人罹患的是急性心包膜炎(acute pericarditis)。")
+		if (Case["diagnosis"].indexOf(results.response) >= 0) {
+			session.send("答對了！這位病人罹患的是"+Case["answer"]+"。")
 			session.replaceDialog("summary");
 		} else {
-			session.send("錯囉！這位病人罹患的是急性心包膜炎(acute pericarditis)。")
+			session.send("錯囉！這位病人罹患的是"+Case["answer"]+"。")
 			session.replaceDialog("summary");
 		}
 	}
@@ -125,9 +195,10 @@ bot.dialog('options', [
 
 bot.dialog('summary', [
     function (session) {
-		builder.Prompts.text(session, Data["summary"]);
+		session.send(Case["summary"]);
+		builder.Prompts.text(session, "隨便輸入一個訊息重來");
     },
 	function (session) {
-		session.replaceDialog("scene");
+		session.replaceDialog("/");
 	}
 ]);
