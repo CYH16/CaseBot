@@ -17,10 +17,7 @@ var connector = new builder.ChatConnector({
 server.post('/api/messages', connector.listen());
 
 // Get data
-const Data = JSON.parse(require('fs').readFileSync('./case_data_B.json', 'utf8'));
-const Blood = JSON.parse(require('fs').readFileSync('./B_blood.json', 'utf8'));
-const Urine = JSON.parse(require('fs').readFileSync('./B_urine.json', 'utf8'));
-const Image = JSON.parse(require('fs').readFileSync('./B_image.json', 'utf8'));
+const Data = JSON.parse(require('fs').readFileSync('./case_data.json', 'utf8'));
 
 var bot = new builder.UniversalBot(connector, [
 	function (session) {
@@ -122,7 +119,7 @@ bot.dialog('PE', [
 
 bot.dialog('tools', [
     function (session) {
-		var tools = ["抽血","尿液檢查","影像學","其他"];
+		var tools = Object.keys(Case["tools"]);
 		tools.push("我要診斷");
 		var message = new builder.Message(session).text("接下來你想做什麼呢？").suggestedActions(
 			builder.SuggestedActions.create(
@@ -134,132 +131,17 @@ bot.dialog('tools', [
 	function (session, results){
 		if (results.response == "我要診斷" || results.response == "下診斷" || results.response == "診斷" || results.response == "我要下診斷") {
 			session.replaceDialog("diagnosis");
-		} else if (results.response == "抽血") {
-			session.replaceDialog("blood");
-		} else if (results.response == "尿液檢查") {
-			session.replaceDialog("urine");
-		} else if (results.response == "影像學") {
-			session.replaceDialog("image");
-		} else if (results.response == "其他") {
-			session.replaceDialog("other");
+		} else if (results.response in Case["tools"]) {
+			if (Array.isArray(Case["tools"][results.response])) {
+				var reply = new builder.Message().setText(session, Case["tools"][results.response][0]).addAttachment({contentType:'image/jpeg', contentUrl:Case["tools"][results.response][1]});
+				session.send(reply);
+				session.replaceDialog("tools")
+			} else {
+				session.send("%s", Case["tools"][results.response]);
+				session.replaceDialog("tools");
+			}
 		} else {
 			session.send("請選擇我們現在有的工具喔~");
-			session.replaceDialog("tools");
-		}
-	}
-]);
-
-bot.dialog('blood', [
-    function (session) {
-		var message = new builder.Message(session).text("以下是常用的項目，請問要抽哪些呢？例如如果你想抽CBC和CRP，就打\"AW\"或是\"aw\"。").addAttachment({contentType:'image/jpeg', contentUrl:"https://i.imgur.com/tlnPlsj.png"});
-		builder.Prompts.text(session, message);
-		},
-	function (session, results){
-		var order = results.response.toUpperCase();
-		var otherTest = false;
-		for (var i = 0, len = order.length; i < len; i++) {
-			if (order[i] == "?" || order[i] == "？") {
-				otherTest = true;
-			} else if (order[i] in Case["tools"]["blood"]) {
-				if (Array.isArray(Case["tools"]["blood"][results.response])) {
-					var reply = new builder.Message().setText(session, Case["tools"]["blood"][order[i]][0]).addAttachment({contentType:'image/jpeg', contentUrl:Case["tools"]["blood"][order[i]][1]});
-					session.send(reply);
-				} else {
-					session.send("%s：%s", Blood[order[i]],Case["tools"]["blood"][order[i]]);
-				}
-			} else if (order[i] in Blood) {
-				session.send("%s：沒有特別發現", Blood[order[i]]);
-			}
-		}
-		if (otherTest) {
-			session.replaceDialog("other");
-		} else {
-			session.replaceDialog("tools");
-		}
-	}
-]);
-
-bot.dialog('urine', [
-    function (session) {
-		var message = new builder.Message(session).text("以下是常用的項目，請問要驗哪些呢？例如如果你想驗urine routine，就打\"A\"或是\"a\"。").addAttachment({contentType:'image/jpeg', contentUrl:"https://i.imgur.com/qplvd7g.png"});
-		builder.Prompts.text(session, message);
-		},
-	function (session, results){
-		var order = results.response.toUpperCase();
-		var otherTest = false;
-		for (var i = 0, len = order.length; i < len; i++) {
-			if (order[i] == "?" || order[i] == "？") {
-				otherTest = true;
-			} else if (order[i] in Case["tools"]["urine"]) {
-				if (Array.isArray(Case["tools"]["urine"][results.response])) {
-					var reply = new builder.Message().setText(session, Case["tools"]["urine"][order[i]][0]).addAttachment({contentType:'image/jpeg', contentUrl:Case["tools"]["urine"][order[i]][1]});
-					session.send(reply);
-				} else {
-					session.send("%s：%s", Urine[order[i]],Case["tools"]["urine"][order[i]]);
-				}
-			} else if (order[i] in Urine) {
-				session.send("%s：沒有特別發現", Urine[order[i]]);
-			}
-		}
-		if (otherTest) {
-			session.replaceDialog("other");
-		} else {
-			session.replaceDialog("tools");
-		}
-	}
-]);
-
-bot.dialog('image', [
-    function (session) {
-		var message = new builder.Message(session).text("以下是常用的項目，請問要照哪些呢？例如如果你想照CXR和ECG，就打\"AD\"或是\"ad\"。").addAttachment({contentType:'image/jpeg', contentUrl:"https://i.imgur.com/qPwQrCQ.png"});
-		builder.Prompts.text(session, message);
-		},
-	function (session, results){
-		var order = results.response.toUpperCase();
-		var otherTest = false;
-		for (var i = 0, len = order.length; i < len; i++) {
-			if (order[i] == "?" || order[i] == "？") {
-				otherTest = true;
-			} else if (order[i] in Case["tools"]["image"]) {
-				if (Array.isArray(Case["tools"]["image"][results.response])) {
-					var reply = new builder.Message().setText(session, Case["tools"]["image"][order[i]][0]).addAttachment({contentType:'image/jpeg', contentUrl:Case["tools"]["image"][order[i]][1]});
-					session.send(reply);
-				} else {
-					session.send("%s：%s", Image[order[i]],Case["tools"]["image"][order[i]]);
-				}
-			} else if (order[i] in Image) {
-				if (order[i] == "A") {
-					var reply = new builder.Message().text("CXR如下圖").addAttachment({contentType:'image/jpeg', contentUrl:"https://i.imgur.com/YC05OCK.jpg"});
-					session.send(reply);
-				} else if (order[i] == "B") {
-					var reply = new builder.Message().text("KUB如下圖").addAttachment({contentType:'image/jpeg', contentUrl:"https://i.imgur.com/wbyRoO2.png"});
-					session.send(reply);					
-				} else if (order[i] == "D") {
-					var reply = new builder.Message().text("ECG如下圖").addAttachment({contentType:'image/jpeg', contentUrl:"https://i.imgur.com/nAa6h2h.png"});
-					session.send(reply);						
-				} else {
-					session.send("%s：沒有特別發現", Image[order[i]]);
-				}
-			}
-		}
-		if (otherTest) {
-			session.replaceDialog("other");
-		} else {
-			session.replaceDialog("tools");
-		}
-	}
-]);
-
-bot.dialog('other', [
-    function (session) {
-		builder.Prompts.text(session, "你有什麼其他想要檢查的呢？");
-		},
-	function (session, results){
-		if (results.response in Case["tools"]["other"]) {
-			session.send("%s：%s", results.response,Case["tools"]["other"][results.response]);
-			session.replaceDialog("tools");
-		} else {
-			session.send(results.response+"：沒有特別發現");
 			session.replaceDialog("tools");
 		}
 	}

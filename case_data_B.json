@@ -5,13 +5,20 @@
 	"inquiry":["問診結果如下圖。","https://i.imgur.com/D48gI40.png"],
 	"PE":["PE結果在胸壁聽見以下雜音，無其他明顯異常。","音","http://k003.kiwi6.com/hotlink/tbe2o0oj47/1_PE.mp3"],
 	"tools":{
-		"CBC":"CBC發現white count升高。",
-		"肝腎功能":"肝腎功能正常。",
-		"Cardiac biomarkers":"Cardiac biomarkers發現toponin T輕微升高。",
-		"D-dimer":"D-dimer正常。",
-		"CXR":["CXR如下圖。","https://i.imgur.com/AbaTHWo.jpg"],
-		"ECG":["ECG如下圖。","https://i.imgur.com/2DxyLNw.jpg"],
-		"心臟超音波":"心臟超音波發現有輕微的pericardial effusion。"
+		"blood":{
+			"A":"白血球增多",
+			"W":"升高",
+			"S":"升高",
+			"R":"升高"
+		},
+		"urine":{
+		},
+		"image":{
+			"C":"心臟超音波發現有輕微的pericardial effusion。",
+			"D":["ECG如下圖。","https://i.imgur.com/2DxyLNw.jpg"]
+		},
+		"other":{
+		}
 	},
 	"diagnosis":["急性心包膜炎","心包膜炎","acute pericarditis","pericarditis"],
 	"answer":"急性心包膜炎(acute pericarditis)",
@@ -24,13 +31,15 @@
 	"inquiry":["問診結果如下圖。","https://i.imgur.com/QHigKB1.png"],
 	"PE":"PE結果聽見右側的呼吸音降低，且右側胸壁扣診有hyper-resonance。",
 	"tools":{
-		"CBC":"CBC正常",
-		"電解質":"電解質正常",
-		"肝腎功能":"肝腎功能正常。",
-		"Cardiac biomarkers":"Cardiac biomarkers正常。",
-		"D-dimer":"D-dimer正常。",
-		"CXR":["CXR如下圖。","https://i.imgur.com/k5F9SYD.jpg"],
-		"ECG":["ECG如下圖。","https://i.imgur.com/kNash1h.png"]
+		"blood":{
+		},
+		"urine":{
+		},
+		"image":{
+			"A":["CXR如下圖。","https://i.imgur.com/k5F9SYD.jpg"]
+		},
+		"other":{
+		}
 	},
 	"diagnosis":["氣胸","右側氣胸","pneumothorax","tension pneumothorax"],
 	"answer":"右側氣胸(pneumothorax)",

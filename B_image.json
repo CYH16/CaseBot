@@ -1,0 +1,10 @@
+{
+	"A":"CXR",
+	"B":"KUB",
+	"C":"sono",
+	"D":"ECG",
+	"E":"CT",
+	"F":"MRI",
+	"?":"Other test",
+	"？":"Other test"
+}
