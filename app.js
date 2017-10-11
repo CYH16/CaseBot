@@ -221,7 +221,7 @@ bot.dialog('image', [
 			if (order[i] == "?" || order[i] == "？") {
 				otherTest = true;
 			} else if (order[i] in Case["tools"]["image"]) {
-				if (Array.isArray(Case["tools"]["image"][results.response])) {
+				if (Array.isArray(Case["tools"]["image"][order[i]])) {
 					var reply = new builder.Message().setText(session, Case["tools"]["image"][order[i]][0]).addAttachment({contentType:'image/jpeg', contentUrl:Case["tools"]["image"][order[i]][1]});
 					session.send(reply);
 				} else {
