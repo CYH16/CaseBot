@@ -1,2 +1,4 @@
 1. acute pericarditis
 2. pneumothorax
+3. acute cholecystitis
+4. Wilson's disease

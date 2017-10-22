@@ -24,7 +24,7 @@ const Image = JSON.parse(require('fs').readFileSync('./B_image.json', 'utf8'));
 
 var bot = new builder.UniversalBot(connector, [
 	function (session) {
-		var go = ['隨機幫我挑吧'];
+		var go = ['1','2','3','4','隨機幫我挑吧'];
 		var message = new builder.Message(session).text("嗨你好，你想要練習哪一個case呢？").suggestedActions(
 			builder.SuggestedActions.create(
 				session, go.map(choice => new builder.CardAction.imBack(session, choice, choice))
@@ -33,7 +33,12 @@ var bot = new builder.UniversalBot(connector, [
         builder.Prompts.text(session, message);
 	},
 	function (session, results){
-		if (results.response == "隨機幫我挑吧") {
+		if (["1","2","3","4"].indexOf(results.response) >= 0) {
+			session.send("好的，開始囉~");
+			i = parseInt(results.response)-1;
+			Case = Data[i];
+			session.replaceDialog("scene");
+		} else if (results.response == "隨機幫我挑吧") {
 			session.send("好的，幫你隨機挑喔~");
 			i = Math.floor(Math.random()*Data.length);
 			Case = Data[i];
@@ -198,7 +203,7 @@ bot.dialog('urine', [
 					session.send("%s：%s", Urine[order[i]],Case["tools"]["urine"][order[i]]);
 				}
 			} else if (order[i] in Urine) {
-				session.send("%s：沒有特別發現", Urine[order[i]]);
+				session.send("%s：沒有特別發現or目前不需要", Urine[order[i]]);
 			}
 		}
 		if (otherTest) {
@@ -238,7 +243,7 @@ bot.dialog('image', [
 					var reply = new builder.Message().text("ECG如下圖").addAttachment({contentType:'image/jpeg', contentUrl:"https://i.imgur.com/nAa6h2h.png"});
 					session.send(reply);						
 				} else {
-					session.send("%s：沒有特別發現", Image[order[i]]);
+					session.send("%s：沒有特別發現or目前不需要", Image[order[i]]);
 				}
 			}
 		}
@@ -255,11 +260,18 @@ bot.dialog('other', [
 		builder.Prompts.text(session, "你有什麼其他想要檢查的呢？");
 		},
 	function (session, results){
-		if (results.response in Case["tools"]["other"]) {
-			session.send("%s：%s", results.response,Case["tools"]["other"][results.response]);
+		var ans = results.response.toLowerCase();
+		var count = 0;
+		for (var key in Case["tools"]["other"]) {
+			if (key.includes(ans)){
+				session.send("%s：%s", key,Case["tools"]["other"][key]);
+				count++;
+			}
+		}
+		if (count == 0) {
+			session.send(ans+"：沒有特別發現or目前不需要");
 			session.replaceDialog("tools");
 		} else {
-			session.send(results.response+"：沒有特別發現");
 			session.replaceDialog("tools");
 		}
 	}
@@ -276,11 +288,12 @@ bot.dialog('diagnosis', [
 		builder.Prompts.text(session, message);
     },
 	function (session, results){
-		if (results.response == "等等我還想做其他檢查") {
+		var ans = results.response.toLowerCase();
+		if (ans == "等等我還想做其他檢查") {
 			session.replaceDialog("tools");
-		} else if (results.response == "太難了吧~給我點選項~") {
+		} else if (ans == "太難了吧~給我點選項~") {
 			session.replaceDialog("options");
-		} else if (Case["diagnosis"].indexOf(results.response) >= 0) {
+		} else if (Case["diagnosis"].indexOf(ans) >= 0) {
 			session.send("答對了！這位病人罹患的是"+Case["answer"]+"。")
 			session.replaceDialog("summary");
 		} else {

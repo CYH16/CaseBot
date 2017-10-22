@@ -45,5 +45,70 @@
 	"answer":"右側氣胸(pneumothorax)",
 	"options":["急性冠心症","主動脈剝離","急性心包膜炎","急性肺栓塞","氣胸","食道破裂"],
 	"summary":"SUMMARY"
+},
+{
+	"id":3,
+	"scene":"50歲的女性，有糖尿病的病史，今天半夜的時候，突然出現了腹絞痛、噁心的狀況。因為症狀實在太不舒服，她來到了急診室求診。在急診室時，她的生命徵象為38.5/100/22，Sat：97%，BP=143/80。",
+	"inquiry":["問診結果如下圖。","https://i.imgur.com/LBJvf7N.png"],
+	"PE":"PE結果發現外觀有病容(acute ill looking)、心搏略快、hypoactive bowel sound、右上腹部明顯壓痛。",
+	"tools":{
+		"blood":{
+			"A":"白血球增多、貧血(Hb 9.8g/dL)",
+			"B":"Neutrophil為主(85%)",
+			"K":"輕微升高",
+			"M":"輕微升高",
+			"N":"輕微升高",
+			"Z":"升高(230mg/dL)"
+		},
+		"urine":{
+		},
+		"image":{
+			"C":"看到膽囊顯著發炎、壁變厚、水腫樣"
+		},
+		"other":{
+		}
+	},
+	"diagnosis":["急性膽囊炎","膽囊炎","acute cholecystitis","cholecystitis"],
+	"answer":"急性膽囊炎(acute cholecystitis)",
+	"options":["急性闌尾炎","腸阻塞","急性膽囊炎","急性胰臟炎","氣胸","急性肝炎"],
+	"summary":"SUMMARY"
+},
+{
+	"id":4,
+	"scene":"30歲的已婚王先生育有一子，無糖尿病、高血壓病史，半年前在工作上得到拔擢，人生正要進入黃金階段。然而，近一個多月來在工作上屢屢不順，思考與專注力降低，效率和表現大受影響。平常動作變得遲緩，休息手不自主顫抖。情緒因而失落，對大部分事物失去興趣，幾乎每天失眠。在家人的勸說下來到門診。門診狀況: 生命徵象穩定，脈搏77，血壓120/70，體溫36.5度。",
+	"inquiry":["問診結果如下圖。","https://i.imgur.com/l9a55V2.png"],
+	"PE":"PE結果發現resting tremor、bradykinesia、cogwheel rigidity的現象，此外腹部也有輕微腫大。",
+	"tools":{
+		"blood":{
+			"A":"Hb偏低",
+			"I":"升高",
+			"J":"升高",
+			"Y":"偏低",
+			"Z":"升高(230mg/dL)"
+		},
+		"urine":{
+		},
+		"image":{
+			"C":"liver、spleen輕微腫大。"
+		},
+		"other":{
+			"serum ceruloplasmin level":"偏低",
+			"血清銅藍蛋白量濃度":"偏低",
+			"24-hour urinary copper excretion":"偏高",
+			"24-hour urine copper excretion":"偏高",
+			"24小時尿銅量":"偏高",
+			"slit-lamp examination":"發現Kayser-Fleischer ring",
+			"slit lamp examination":"發現Kayser-Fleischer ring",
+			"eye examination":"發現Kayser-Fleischer ring",
+			"cornea examination":"發現Kayser-Fleischer ring",
+			"裂隙燈檢查":"發現Kayser-Fleischer ring",
+			"眼睛檢查":"發現Kayser-Fleischer ring",
+			"角膜檢查":"發現Kayser-Fleischer ring"
+		}
+	},
+	"diagnosis":["威爾森氏症","wilson disease","wilson's disease"],
+	"answer":"威爾森氏症(Wilson's disease)",
+	"options":["病毒性肝炎","威爾森氏症","血鐵沉著症","帕金森氏症","阿茲海默症","腦瘤"],
+	"summary":"SUMMARY"
 }
 ]
