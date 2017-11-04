@@ -173,7 +173,7 @@ bot.dialog('blood', [
 					session.send("%s：%s", Blood[order[i]],Case["tools"]["blood"][order[i]]);
 				}
 			} else if (order[i] in Blood) {
-				session.send("%s：沒有特別發現", Blood[order[i]]);
+				session.send("%s：沒有特別發現or目前不需要", Blood[order[i]]);
 			}
 		}
 		if (otherTest) {
@@ -262,6 +262,24 @@ bot.dialog('other', [
 	function (session, results){
 		var ans = results.response.toLowerCase();
 		var count = 0;
+		for (var key in Blood) {
+			if (Blood[key].toLowerCase().includes(ans)){
+				session.send("%s：%s", Blood[key], Case["tools"]["blood"][key]);
+				count++;
+			}
+		}	
+		for (var key in Urine) {
+			if (Urine[key].toLowerCase().includes(ans)){
+				session.send("%s：%s", Urine[key], Case["tools"]["urine"][key]);
+				count++;
+			}
+		}
+		for (var key in Image) {
+			if (Image[key].toLowerCase().includes(ans)){
+				session.send("%s：%s", Image[key], Case["tools"]["image"][key]);
+				count++;
+			}
+		}		
 		for (var key in Case["tools"]["other"]) {
 			if (key.includes(ans)){
 				session.send("%s：%s", key,Case["tools"]["other"][key]);
